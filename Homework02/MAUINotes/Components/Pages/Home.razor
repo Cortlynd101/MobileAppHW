@@ -1,0 +1,107 @@
+﻿@page "/"
+@using MAUINotes.Classes
+@using MAUINotes.Initializers
+@using NotesLib.Data
+@using NotesLib.Services
+@inject IUserService userService
+@inject LocalDatabaseInitializer ldi
+
+
+<h1>Hello, world!</h1>
+
+
+<input placeholder="Enter Name" type="text" @bind="Name"/>
+<button @onclick="SaveUser">Save to database</button>
+
+<div ><p>@User.Id @User.Name</p><br/</div>
+<button @onclick="GetUsers">Show Users</button>
+
+<ul>
+@foreach(var u in Users)
+{
+	<li>@u.Name<button @onclick="() => StartEdit(u)">Edit</button></li>
+}
+</ul>
+
+@if(UserToBeEdited is not null)
+{
+	<label>Change Username</label>
+	<input placeholder="@UserToBeEdited.Name" @bind="NewName"/>
+	<button class="btn btn-primary" @onclick="SubmitEdit">Submit Change</button>
+	@* <button class="btn btn-danger" @onclick="DeleteUser">DELETE USER</button> *@
+}
+
+Welcome to your new app.
+
+
+@code
+{
+	public string? Name { get; set; }
+	public User User { get; set; } = new();
+	public IEnumerable<User> Users { get; set; } = [];
+	public User UserToBeEdited { get; set; }
+	public string NewName { get; set; }
+
+	public async Task GetUsers()
+	{
+		Users = await userService.GetAllUsers();
+	}
+	public async Task EditUser(User user)
+	{
+		await userService.UpdateUser(user);
+	}
+	public async Task SaveUser()
+	{
+		if(Name is null)
+		{
+			return;
+		}
+
+		User = await userService.PostUser(Name);
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ldi.InitializeLocalDatabase();
+		Connectivity.ConnectivityChanged += async (s, e) => await checkToSync(s, e);
+		await DoSync();
+	}
+
+	public async Task DoSync()
+	{
+		PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+		var sync = new Sync();
+		while (ValidNetwork(Connectivity.Current.NetworkAccess) && await timer.WaitForNextTickAsync())
+		{
+			await sync.LocalToAPI();
+		}
+	}
+
+	public async Task checkToSync(object sender, ConnectivityChangedEventArgs e)
+	{
+		if (ValidNetwork(e.NetworkAccess))
+		{
+			await DoSync();
+		}
+	}
+
+	public bool ValidNetwork(NetworkAccess current) => (current == NetworkAccess.Local || current == NetworkAccess.Internet || current == NetworkAccess.ConstrainedInternet);
+
+	public void StartEdit(User user)
+	{
+		UserToBeEdited = user;
+	}
+
+	public async Task SubmitEdit()
+	{
+		UserToBeEdited.LastSync = DateTime.Now;
+		UserToBeEdited.Name = NewName;
+		await userService.UpdateUser(UserToBeEdited);
+	}
+
+	public async Task DeleteUser()
+	{
+		UserToBeEdited.LastSync = DateTime.Now;
+		await userService.DeleteUser(UserToBeEdited);
+	}
+}
