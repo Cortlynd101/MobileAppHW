@@ -1,0 +1,30 @@
+﻿@page "/demo2"
+<h2>Demo 2</h2>
+
+<br />
+<h3>Connectivity: </h3>
+@if (haveInternet == true)
+{
+    <p>You currently have internet! </p>
+}
+else
+{
+    <p>You don't currently have internet! </p>
+}
+
+@code {
+    bool haveInternet = IsConnected();
+    public static bool IsConnected()
+    {
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+        if (accessType == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}

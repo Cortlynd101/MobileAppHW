@@ -1,0 +1,23 @@
+﻿@page "/demo7"
+<h2>Demo 7</h2>
+
+<br />
+<h3>Browser</h3>
+<button @onclick="()=>BrowserOpen_Clicked(sender, e)">Go to microsoft.com</button>
+
+@code {
+    object sender = "";
+    EventArgs e = new();
+    private async void BrowserOpen_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            Uri uri = new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+        }
+        catch (Exception ex)
+        {
+            // An unexpected error occurred. No browser may be installed on the device.
+        }
+    }
+}

@@ -1,0 +1,24 @@
+﻿@page "/demo3"
+<h2>Demo 3</h2>
+
+<br />
+<h3>Device Display Information</h3>
+<p>
+    Screen pixel info: @pixels
+    <br />
+    Screen pixel density: @density
+    <br />
+    Screen orientation: @orientation
+    <br />
+    Screen rotation: @rotation
+    <br />
+    Screen refresh rate: @refreshRate
+</p>
+
+@code {
+    string pixels = $"Pixel width: {DeviceDisplay.Current.MainDisplayInfo.Width} / Pixel Height: {DeviceDisplay.Current.MainDisplayInfo.Height}";
+    string density = DeviceDisplay.Current.MainDisplayInfo.Density.ToString();
+    string orientation = DeviceDisplay.Current.MainDisplayInfo.Orientation.ToString();
+    string rotation = DeviceDisplay.Current.MainDisplayInfo.Rotation.ToString();
+    string refreshRate = DeviceDisplay.Current.MainDisplayInfo.RefreshRate.ToString();
+}

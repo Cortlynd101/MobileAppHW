@@ -1,0 +1,20 @@
+﻿@page "/demo"
+<h2>Demo</h2>
+
+<br />
+<h3>App information: </h3>
+<p>
+    App name: @name
+    <br />
+    App package: @package
+    <br />
+    App version: @version
+    <br />
+    App build: @build
+</p>
+@code {
+    string name = AppInfo.Current.Name;
+    string package = AppInfo.Current.PackageName;
+    string version = AppInfo.Current.VersionString;
+    string build = AppInfo.Current.BuildString;
+}

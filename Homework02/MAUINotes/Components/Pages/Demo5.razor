@@ -1,0 +1,11 @@
+﻿@page "/demo5"
+<h2>Demo 5</h2>
+
+<br />
+<h3>Text-to-Speech</h3>
+<button @onclick="Speak">Say "Hello World"</button>
+
+@code {
+    public async void Speak() =>
+    await TextToSpeech.Default.SpeakAsync("Hello World");
+}

@@ -1,0 +1,27 @@
+﻿@page "/demo6"
+@using Microsoft.Maui.Storage;
+<h2>Demo 6</h2>
+
+<br />
+<h3>Preferences</h3>
+<input placeholder="Enter Prefered Pizza" type="text" @bind="pizza" />
+<button @onclick="()=>setPizzaPreference(pizza, key)">Set Preferred Pizza</button>
+
+@if(pizza == "")
+{
+    <p>No preference.</p>
+}
+else
+{
+    <p>You prefer @Preferences.Default.Get("pizza", "Unknown") pizza.</p>
+}
+
+@code {
+    string pizza = "";
+    string key = "pizza";
+    public static void setPizzaPreference(string preference, string key)
+    {
+        // Set a string value:
+        Preferences.Default.Set(key, preference);
+    }
+}

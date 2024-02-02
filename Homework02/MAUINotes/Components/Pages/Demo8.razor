@@ -1,0 +1,13 @@
+﻿@page "/demo8"
+<h2>Demo 8</h2>
+
+<br />
+<h3>Clipboard</h3>
+<button @onclick="()=>SetClipboardButton_Clicked(sender, e)">This text was copied.</button>
+
+@code {
+    object sender = "";
+    EventArgs e = new();
+    private async void SetClipboardButton_Clicked(object sender, EventArgs e) =>
+    await Clipboard.Default.SetTextAsync("This text was copied.");
+}

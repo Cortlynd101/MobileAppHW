@@ -1,0 +1,24 @@
+﻿@page "/demo4"
+<h2>Demo 4</h2>
+
+<br />
+<h3>Device Information</h3>
+<p>
+    Model: @model
+    <br />
+    Manufacturer: @manufacturer
+    <br />
+    Name: @name
+    <br />
+    OS version: @OSVersion
+    <br />
+    Platform: @platform
+</p>
+
+@code {
+    string model = DeviceInfo.Current.Model;
+    string manufacturer = DeviceInfo.Current.Manufacturer;
+    string name = DeviceInfo.Current.Name;
+    string OSVersion = DeviceInfo.Current.VersionString;
+    string platform = DeviceInfo.Current.Platform.ToString();
+}
